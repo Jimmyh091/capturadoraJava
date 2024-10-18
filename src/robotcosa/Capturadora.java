@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 /**
  *
@@ -26,6 +23,7 @@ import javax.swing.JLabel;
  */
 public class Capturadora{
     
+    int FPS = 24;
     Robot r;
     int veces;
     ArrayList<BufferedImage> lista = new ArrayList<>();
@@ -36,12 +34,14 @@ public class Capturadora{
         
         r = new Robot();
         
-        double drawInterval = 1000000000 / 24;
+        double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         
         long cronometer = 0;
+        
+        int capsHechas = 0;
         
         int numCaps = 0;
         int contador = 0;
@@ -56,10 +56,14 @@ public class Capturadora{
             if (delta >= 1) {
                 lista.add(hacerCaptura());
                 numCaps++;
-                delta--;               
+                System.out.println(numCaps);
+                delta--;
+                capsHechas++;
             }
             
             if (cronometer >= 1000000000) {
+                System.out.println("Caps: " + capsHechas);
+                capsHechas = 0;
                 cronometer = 0;
                 contador++;
             }
@@ -81,7 +85,7 @@ public class Capturadora{
                 
                 f.createNewFile();
                 ImageIO.write(lista.get(i), "jpg", f);
-                
+                                
             } catch (IOException ex) {
                 Logger.getLogger(Capturadora.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -90,7 +94,7 @@ public class Capturadora{
     }
     
     public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-        Capturadora robotCosa = new Capturadora(1);
+        Capturadora robotCosa = new Capturadora(5);
                 
         robotCosa.hacerCaptura();
         robotCosa.guardar();
