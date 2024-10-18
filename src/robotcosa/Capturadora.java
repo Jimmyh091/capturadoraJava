@@ -43,6 +43,7 @@ public class Capturadora{
         
         long cronometer = 0;
         
+        int numCaps = 0;
         int contador = 0;
         
         while(contador < segundos){
@@ -54,7 +55,7 @@ public class Capturadora{
             
             if (delta >= 1) {
                 lista.add(hacerCaptura());
-                System.out.println("a");
+                numCaps++;
                 delta--;               
             }
             
