@@ -30,16 +30,38 @@ public class Capturadora{
     int veces;
     ArrayList<BufferedImage> lista = new ArrayList<>();
     
-    public Capturadora(int num) throws AWTException, IOException, InterruptedException{
+    public Capturadora(int segundos) throws AWTException, IOException, InterruptedException{
         
-        veces = num;
+        veces = segundos;
         
         r = new Robot();
         
-        for (int i = 0; i < num; i++) {
+        double drawInterval = 1000000000 / 24;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        
+        long cronometer = 0;
+        
+        int contador = 0;
+        
+        while(contador < segundos){
             
-            lista.add(hacerCaptura());
-            Thread.sleep(1000);
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            cronometer += currentTime - lastTime;
+            lastTime = currentTime;
+            
+            if (delta >= 1) {
+                lista.add(hacerCaptura());
+                System.out.println("a");
+                delta--;               
+            }
+            
+            if (cronometer >= 1000000000) {
+                cronometer = 0;
+                contador++;
+            }
         }
     }
     
@@ -50,7 +72,7 @@ public class Capturadora{
     
     public void guardar(){
         
-        for (int i = 0; i < veces; i++) {
+        for (int i = 0; i < lista.size(); i++) {
             
             File f = new File("C:\\Users\\EAG\\Desktop\\guardar\\ " + i + " .jpg");
 
@@ -67,7 +89,7 @@ public class Capturadora{
     }
     
     public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-        Capturadora robotCosa = new Capturadora(5);
+        Capturadora robotCosa = new Capturadora(1);
                 
         robotCosa.hacerCaptura();
         robotCosa.guardar();
